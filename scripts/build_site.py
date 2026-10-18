@@ -5,6 +5,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
 from common import *
 import salary as S
+import pages_labor
 
 DUP = set()
 DUP2 = set()
@@ -455,6 +456,9 @@ def page_home(meta, cs, cap):
 <a class="card" href="/industry/"><b>업종별 평균연봉</b><span>%(ni)s개 업종 비교</span></a>
 <a class="card" href="/region/"><b>지역별 평균연봉</b><span>시도·시군구별 회사</span></a>
 <a class="card" href="/calculator/"><b>실수령액 계산기</b><span>연봉·월급·부양가족 직접 입력</span></a>
+<a class="card" href="/severance/"><b>퇴직금 계산</b><span>월급·근속기간별 퇴직금과 세금</span></a>
+<a class="card" href="/unemployment/"><b>실업급여 2026</b><span>하한 66,048원·상한 68,100원</span></a>
+<a class="card" href="/weekly-holiday/"><b>주휴수당·최저임금</b><span>시급별 월급 환산(2026·2027)</span></a>
 </div>
 <p class="lead">우아연봉은 국민연금공단의 가입 사업장 내역(%(ym)s 기준)을 이용해 직원 %(minn)s명 이상 법인 %(nc)s곳의 직원 수, 추정 평균연봉, 최근 1년 입사·퇴사 규모를 보여 드립니다. 추정 방식과 한계는 <a href="/about/">산정 기준</a>에서 공개합니다.</p>
 <script src="/assets/js/search.js"></script>
@@ -564,6 +568,7 @@ def main():
     for v in ANNUAL_STEPS: page_salary(v, cs_est)
     for m in MONTHLY_STEPS: page_monthly(m)
     hub_pages(); page_calculator()
+    print("labor pages", pages_labor.all_pages())
     # 업종
     inds = [page_industry(k, lst, meta, cap) for k, lst in ind.items() if len(lst) >= 15 and k not in ("000000", "")]
     page_industry_index(inds)

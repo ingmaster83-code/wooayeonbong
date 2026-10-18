@@ -9,7 +9,7 @@ SITE = "우아연봉"
 NAVER_TOKEN = "aa5917e802300415e9cc19bec5e801633aa40fce"      # 네이버 서치어드바이저 메타태그 값 — 사용자 발급 후 입력
 esc = html.escape
 
-NAV = [("연봉 실수령액", "/salary/"), ("월급 실수령액", "/monthly/"), ("회사 연봉", "/rank/"), ("업종", "/industry/"), ("지역", "/region/"), ("계산기", "/calculator/")]
+NAV = [("연봉 실수령액", "/salary/"), ("월급 실수령액", "/monthly/"), ("퇴직금", "/severance/"), ("실업급여", "/unemployment/"), ("주휴수당", "/weekly-holiday/"), ("회사 연봉", "/rank/"), ("업종", "/industry/"), ("지역", "/region/"), ("계산기", "/calculator/")]
 
 _JOSA = re.compile(r'(\S)((?:</[a-z]+>)*)(이\(가\)|은\(는\)|을\(를\)|과\(와\))')
 _DIG = {"0": True, "1": True, "2": False, "3": True, "4": False, "5": False, "6": True, "7": True, "8": True, "9": False}
