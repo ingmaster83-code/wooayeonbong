@@ -6,12 +6,12 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "_site"
 BASE = "https://wooayeonbong.wooahouse.com"
 SITE = "우아연봉"
-NAVER_TOKEN = ""      # 네이버 서치어드바이저 메타태그 값 — 사용자 발급 후 입력
+NAVER_TOKEN = "aa5917e802300415e9cc19bec5e801633aa40fce"      # 네이버 서치어드바이저 메타태그 값 — 사용자 발급 후 입력
 esc = html.escape
 
 NAV = [("연봉 실수령액", "/salary/"), ("월급 실수령액", "/monthly/"), ("회사 연봉", "/rank/"), ("업종", "/industry/"), ("지역", "/region/"), ("계산기", "/calculator/")]
 
-_JOSA = re.compile(r'([가-힣0-9\)])((?:</[a-z]+>)*)(이\(가\)|은\(는\)|을\(를\)|과\(와\))')
+_JOSA = re.compile(r'(\S)((?:</[a-z]+>)*)(이\(가\)|은\(는\)|을\(를\)|과\(와\))')
 _DIG = {"0": True, "1": True, "2": False, "3": True, "4": False, "5": False, "6": True, "7": True, "8": True, "9": False}
 def _has_batchim(s, end):
     c = s[end]
@@ -19,7 +19,9 @@ def _has_batchim(s, end):
         k = s.rfind("(", 0, end)
         return _has_batchim(s, k - 1) if k > 0 else False
     if c in _DIG: return _DIG[c]
-    return (ord(c) - 0xAC00) % 28 != 0
+    if "가" <= c <= "힣": return (ord(c) - 0xAC00) % 28 != 0
+    if c.isascii() and c.isalpha(): return c in "lmnrLMNR"
+    return False
 def josa(t):
     def f(m):
         has = _has_batchim(m.string, m.start(1))

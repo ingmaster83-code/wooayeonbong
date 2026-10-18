@@ -6,6 +6,7 @@ sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
 from common import *
 import salary as S
 
+DUP = set()
 SITE_MIN_N = int(sys.argv[1]) if len(sys.argv) > 1 else 30
 MIN_WAGE_2026 = 10_320
 CAP_NOW = 6_590_000
@@ -318,7 +319,7 @@ def page_company(c, meta, cap, ind_stats, ind, reg, cs_est_sorted):
            ("%s 퇴사율은 어떻게 보나요?" % c["name"], ("최근 12개월 상실 가입자 %s명을 평균 가입자 %s명으로 나눈 값은 약 %.0f%%입니다. 상실에는 정년·계약 만료·전출 등이 포함돼 자발적 퇴사율과는 다릅니다." % ("{:,}".format(c["lost12"]), "{:,}".format(round(c["avg_n"])), c["turn"])) if c["turn"] is not None else "집계 기간이 12개월에 못 미쳐 퇴사율을 계산하지 않았습니다.")]
     ld = [{"@context": "https://schema.org", "@type": "Organization", "name": c["name"], "address": {"@type": "PostalAddress", "addressRegion": c["sido"], "addressLocality": c["sgg"], "addressCountry": "KR"},
            "numberOfEmployees": {"@type": "QuantitativeValue", "value": c["n"]}}]
-    title = "%s 평균연봉·직원수·퇴사율 (%s)" % (c["name"], ym_txt(dm))
+    title = "%s 평균연봉·직원수·퇴사율 (%s)" % (c["name"] + ("[%s %s]" % (c["sido"], c["sgg"]) if c["name"] in DUP else ""), ym_txt(dm))
     desc = "%s(%s %s, %s) 직원 %s명, 추정 평균연봉 %s%s. 최근 1년 인원 %+d명. 국민연금 가입 사업장 데이터 기반." % (
         c["name"], c["sido"], c["sgg"], c["iname"], "{:,}".format(c["n"]), st, (", 연 퇴사율 약 %.0f%%" % c["turn"]) if c["turn"] is not None else "", c["chg"])
     write(path, layout(path, title, desc, body, faq, [("홈", "/"), ("회사 연봉", "/rank/"), (c["name"], path)], extra_ld=ld, coupang=(c["n"] >= 100)), "0.5" if c["n"] < 100 else "0.7")
@@ -544,8 +545,10 @@ def main():
     if OUT.exists(): shutil.rmtree(OUT)
     OUT.mkdir()
     meta, cs, rate, cap = load()
+    DUP.update(k for k, v in collections.Counter(c["name"] for c in cs).items() if v > 1)
     print("회사", len(cs), "최신", meta["latest_data"], "rate", rate, "cap", cap)
     write_assets(cs, cap)
+    for nf in ROOT.glob("naver*.html"): shutil.copy(nf, OUT / nf.name)
     ind, reg, sido = build_groups(cs)
     ind_stats = {}
     for k, lst in ind.items():
