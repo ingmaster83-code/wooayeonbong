@@ -6,6 +6,7 @@ sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
 from common import *
 import salary as S
 import pages_labor
+import pages_yearend
 
 DUP = set()
 DUP2 = set()
@@ -569,6 +570,7 @@ def main():
     for m in MONTHLY_STEPS: page_monthly(m)
     hub_pages(); page_calculator()
     print("labor pages", pages_labor.all_pages())
+    print("yearend pages", pages_yearend.all_pages())
     # 업종
     inds = [page_industry(k, lst, meta, cap) for k, lst in ind.items() if len(lst) >= 15 and k not in ("000000", "")]
     page_industry_index(inds)
